@@ -94,8 +94,8 @@ const login = async (req, res, next) => {
                 id= decodedToken.userID;
             });
             if(id){
-                return res.json({status:'sucess',msg:'login successfully',token:token})
-                // let user= await User.findOne({_id:id});
+                let user= await User.findOne({_id:id});
+                return res.json({status:'sucess',msg:'login successfully',token:token,data:user})
                 // let h1=await HiringBill.find({user:user._id,endDate:null});
                 // let h2= await HiringBill.find({user:user._id});
                 // let h3= await HiringBill.find({user:user._id,isCancel:true});
