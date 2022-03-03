@@ -72,7 +72,7 @@ const login = async (req, res, next) => {
             return res.json({ status: 'fail', msg: 'Password is not match!' })
         }
         const token = createJwtToken(staff._id);
-        return res.json({status:'sucess',msg:'login successfully',token:token})
+        return res.json({status:'sucess',msg:'login successfully',token:token,data:staff})
         // let h1=await HiringBill.find({user:staff._id,endDate:null});
         // let h2= await HiringBill.find({user:staff._id});
         // let h3= await HiringBill.find({user:staff._id,isCancel:true});
