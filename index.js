@@ -4,6 +4,7 @@ const http=require("http");
 const connectionDB= require('./connection');
 const userRoute= require('./routes/userRoute');
 const categoryRoute = require('./routes/categoryRoute');
+const imageRoute = require('./routes/imageRoute');
 // socket.io notification
 const app = express();
 const server = http.createServer(app)
@@ -36,6 +37,10 @@ app.use(userRoute,function(req,res,next){
 });
 
 app.use(categoryRoute,function(req,res,next){
+    next()
+});
+
+app.use(imageRoute,function(req,res,next){
     next()
 });
 

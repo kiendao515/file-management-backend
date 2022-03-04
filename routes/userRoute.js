@@ -1,4 +1,5 @@
 const userController= require('../controllers/userController');
+const imageController= require('../controllers/imageController');
 const express= require('express');
 const router= express.Router();
 
@@ -11,6 +12,7 @@ router.post('/api/v1/user/register',userController.register);
 router.post('/api/v1/user/login',userController.login);
 router.post('/api/v1/user/forgetpass',userController.forgetPass);
 router.post('/api/v1/user/changepass/:id',userController.normalUserChangePass);
+router.get('/api/v1/user/dashboard',imageController.getListImage);
 // ------ end user ------
 
 
