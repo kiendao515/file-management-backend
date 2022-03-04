@@ -3,7 +3,7 @@ const socketio=require('socket.io');
 const http=require("http");
 const connectionDB= require('./connection');
 const userRoute= require('./routes/userRoute');
-
+const categoryRoute = require('./routes/categoryRoute');
 // socket.io notification
 const app = express();
 const server = http.createServer(app)
@@ -32,6 +32,10 @@ const corsOpts = {
 
 app.use(cors(corsOpts));
 app.use(userRoute,function(req,res,next){
+    next()
+});
+
+app.use(categoryRoute,function(req,res,next){
     next()
 });
 
