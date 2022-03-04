@@ -105,10 +105,7 @@ const login = async (req, res, next) => {
                 // }else{
                 //     return res.json({ status: 'success', msg: "login successfully", token: token, data: user,check:true});
                 // }
-            }else{
-                return res.json({status:'fail',msg:'invalid token'})
             }
-            
         }
     }
 }
