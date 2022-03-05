@@ -2,6 +2,7 @@ const {Image} = require('../model/image');
 const jwt = require("jsonwebtoken");
 const { User } = require('../model/user');
 const { createJwtToken } = require("../util/auth")
+const mongoose = require("mongoose");
 const addImage = async(req,res,next)=>{
     const {imageUrl,description,tag}= req.body;
     console.log(tag);
@@ -51,5 +52,19 @@ const getListImage = async(req,res,next)=>{
     }
 }
 
+const listDataFromFilter = async(req,res,next)=>{
+    let {tag}= req.body;
+    console.log(tag);
+    let arr=[];
+    for(var i=0;i< tag.length;i++){
+        arr.push(mongoose.Types.ObjectId(tag[i]));
+        if(arr.length===tag.length){
+            Image.find({'tag':{$in:tag}}).then(doc=>{
+                return res.json({status:'success',data:doc})
+            })
+        }
+    }
+}
 exports.addImage=addImage;
 exports.getListImage=getListImage;
+exports.listDataFromFilter=listDataFromFilter;
