@@ -22,9 +22,11 @@
     "mongoose": "^6.0.13",
     "mongoose-int32": "^0.5.0",
     "multer": "^1.4.4",
+    "node-tesseract-ocr": "^2.2.1",
     "nodemailer": "^6.7.0",
     "nodemon": "^2.0.15",
     "path": "^0.12.7",
+    "puppeteer": "^13.5.1",
     "socket.io": "^4.4.0"
   }
 }

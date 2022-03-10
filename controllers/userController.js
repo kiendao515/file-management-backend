@@ -5,8 +5,8 @@ const { validationResult } = require('express-validator');
 const SendEmail = require('../util/sendEmail');
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-
-
+const puppeteer = require("puppeteer");
+const tesseract = require("node-tesseract-ocr")
 
 // register - dang ky tai khoan
 const register = async (req, res) => {
@@ -14,7 +14,7 @@ const register = async (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(200).json({ msg: 'Invalid input, please check your data' })
     }
-    const {password, email, name } = req.body;
+    const { password, email, name } = req.body;
     console.log(req.body);
     let user;
     try {
@@ -34,7 +34,7 @@ const register = async (req, res) => {
         res.status(500).send({ msg: 'Server Error' });
     }
 
-    
+
 
     user = new User({
         password: hashedPassword, email, name
@@ -42,7 +42,7 @@ const register = async (req, res) => {
     try {
         await user.save().then(doc => {
             const token = createJwtToken(doc._id);
-            res.json({ status: 'success',msg:'Sign up successfully', token: token })
+            res.json({ status: 'success', msg: 'Sign up successfully', token: token })
         });
     } catch (err) {
         console.log(err);
@@ -72,7 +72,7 @@ const login = async (req, res, next) => {
             return res.json({ status: 'fail', msg: 'Password is not match!' })
         }
         const token = createJwtToken(staff._id);
-        return res.json({status:'sucess',msg:'login successfully',token:token,data:staff})
+        return res.json({ status: 'sucess', msg: 'login successfully', token: token, data: staff })
         // let h1=await HiringBill.find({user:staff._id,endDate:null});
         // let h2= await HiringBill.find({user:staff._id});
         // let h3= await HiringBill.find({user:staff._id,isCancel:true});
@@ -85,17 +85,17 @@ const login = async (req, res, next) => {
         // }
     } else {
         const token = req.headers.authorization.split(' ')[1];
-        let id ;
+        let id;
         if (token) {
             jwt.verify(token, "kiendao2001", function (err, decodedToken) {
                 if (err) {
                     return res.json({ status: 'fail', msg: "Invalid token" })
                 }
-                id= decodedToken.userID;
+                id = decodedToken.userID;
             });
-            if(id){
-                let user= await User.findOne({_id:id});
-                return res.json({status:'sucess',msg:'login successfully',token:token,data:user})
+            if (id) {
+                let user = await User.findOne({ _id: id });
+                return res.json({ status: 'sucess', msg: 'login successfully', token: token, data: user })
                 // let h1=await HiringBill.find({user:user._id,endDate:null});
                 // let h2= await HiringBill.find({user:user._id});
                 // let h3= await HiringBill.find({user:user._id,isCancel:true});
@@ -158,7 +158,40 @@ const forgetPass = async (req, res) => {
     })
 }
 
+const requestCapcha = async (req, res) => {
+    browser = await puppeteer.launch({
+        headless: false,
+        args: ["--no-sandbox"],
+        ignoreDefaultArgs: ['--disable-extensions']
+    })
+    page = await browser.newPage();
+    await page.goto('https://ctt-sis.hust.edu.vn/Account/Login.aspx', { waitUntil: 'domcontentloaded' });
+    await page.waitFor(500)
+    const hrefs1 = await page.evaluate(
+        () => Array.from(
+            document.querySelectorAll('#ctl00_ctl00_contentPane_MainPanel_MainContent_ASPxCaptcha1_IMG'),
+            a => a.getAttribute('src')
+        )
+    );
+    console.log('https://ctt-sis.hust.edu.vn' + hrefs1[0]);
+    return res.json({status:'success',data:'https://ctt-sis.hust.edu.vn' + hrefs1[0]})
+    // const config = {
+    //     lang: "eng",
+    //     oem: 1,
+    //     psm: 3,
+    // }
+    // tesseract
+    //     .recognize('https://ctt-sis.hust.edu.vn' + hrefs1[0], config)
+    //     .then((text) => {
+    //         console.log("Result:", text)
+    //     })
+    //     .catch((error) => {
+    //         console.log(error.message)
+    //     })
+}
+
 exports.forgetPass = forgetPass;
 exports.register = register;
 exports.login = login;
 exports.normalUserChangePass = normalUserChangePass;
+exports.requestCapcha = requestCapcha;

@@ -14,6 +14,9 @@ router.post('/api/v1/user/forgetpass',userController.forgetPass);
 router.post('/api/v1/user/changepass/:id',userController.normalUserChangePass);
 router.get('/api/v1/user/dashboard',imageController.getListImage);
 router.post('/api/v1/user/category/filter',imageController.listDataFromFilter)
+
+// crawl data
+router.get('/api/v1/get/capcha',userController.requestCapcha);
 // ------ end user ------
 
 
