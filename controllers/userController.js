@@ -160,7 +160,7 @@ const forgetPass = async (req, res) => {
 
 const requestCapcha = async (req, res) => {
     browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         args: ["--no-sandbox"],
         ignoreDefaultArgs: ['--disable-extensions']
     })
